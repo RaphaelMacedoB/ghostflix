@@ -216,15 +216,20 @@ export async function startSession({ abs, videoAbs, info, audio = 0, start = 0, 
     const vf = [h > 1080 ? 'scale=-2:1080' : null, 'format=yuv420p'].filter(Boolean).join(',');
     args.push('-vf', vf, ...encoderArgs(enc), '-force_key_frames', `expr:gte(t,n_forced*${SEG})`);
   }
-  if (info.audio.length) args.push('-c:a', 'aac', '-ac', '2', '-b:a', '192k');
+  if (info.audio.length) args.push('-c:a', 'aac', '-profile:a', 'aac_low', '-ac', '2', '-b:a', '192k');
   args.push(
     '-f', 'hls', '-hls_time', String(SEG), '-hls_list_size', '0',
     '-hls_playlist_type', 'event', '-hls_flags', 'independent_segments',
-    '-hls_segment_filename', path.join(dir, 'seg%05d.ts'),
-    path.join(dir, 'index.m3u8')
+    // Pedaços em MP4 fragmentado (não .ts): o arquivo de início já diz ao navegador que o áudio é AAC-LC.
+    // Com .ts, o hls.js anuncia o áudio como HE-AAC no Chrome e o som sai robótico e picotado.
+    '-hls_segment_type', 'fmp4', '-hls_fmp4_init_filename', 'init.mp4',
+    '-hls_segment_filename', 'seg%05d.m4s',
+    'index.m3u8'
   );
 
-  const proc = spawn(FFMPEG, args, { windowsHide: true });
+  // Roda dentro da pasta da sessão: o ffmpeg grava o init.mp4 relativo à pasta atual,
+  // e nomes relativos mantêm a lista (index.m3u8) com endereços simples
+  const proc = spawn(FFMPEG, args, { windowsHide: true, cwd: dir });
   let stderr = '';
   proc.stderr.on('data', d => { stderr = (stderr + d).slice(-4000); });
   const session = { id, dir, proc, lastAccess: Date.now(), done: false, failed: false, encoder: videoAbs ? 'copy (melhorado)' : info.copyVideo ? 'copy' : enc };

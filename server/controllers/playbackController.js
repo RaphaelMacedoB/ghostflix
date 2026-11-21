@@ -62,10 +62,10 @@ export function playbackController({ library, enhancer, hasFfmpeg, transcodeDir,
 
     hlsFile(req, res) {
       const { sid, file } = req.params;
-      if (!/^[a-f0-9]{16}$/.test(sid) || !/^(index\.m3u8|seg\d{5}\.ts)$/.test(file)) return res.sendStatus(400);
+      if (!/^[a-f0-9]{16}$/.test(sid) || !/^(index\.m3u8|init\.mp4|seg\d{5}\.m4s)$/.test(file)) return res.sendStatus(400);
       if (!touchSession(sid)) return res.sendStatus(404);
       res.set('Cache-Control', 'no-cache');
-      res.type(file.endsWith('.m3u8') ? 'application/vnd.apple.mpegurl' : 'video/mp2t');
+      res.type(file.endsWith('.m3u8') ? 'application/vnd.apple.mpegurl' : file.endsWith('.m4s') ? 'video/iso.segment' : 'video/mp4');
       res.sendFile(path.join(transcodeDir, sid, file), err => { if (err && !res.headersSent) res.sendStatus(404); });
     }
   };
