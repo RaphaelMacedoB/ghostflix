@@ -1,0 +1,28 @@
+{
+  "name": "ghostflix",
+  "version": "1.0.0",
+  "description": "Ghostflix - catálogo de filmes local (React + Node, arquitetura MVC) que observa a pasta Filmes, busca capas e toca qualquer formato",
+  "main": "server/index.js",
+  "type": "module",
+  "scripts": {
+    "prestart": "node scripts/build-if-needed.mjs",
+    "start": "node server/index.js",
+    "build": "vite build --config client/vite.config.js",
+    "dev": "node scripts/dev.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "express": "^4.21.2",
+    "hls.js": "^1.5.20",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.3.0",
+    "vite": "^8.3.8"
+  }
+}

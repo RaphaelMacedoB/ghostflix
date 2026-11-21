@@ -1,0 +1,14 @@
+# Dependências e interface gerada (recriadas por "npm install" e "npm start")
+node_modules/
+client/dist/
+
+# Dados gerados pelo Ghostflix (capas, cache, conversões, versões melhoradas)
+data/
+
+# Filmes de cada pessoa: a pasta vai vazia para o repositório
+Filmes/*
+!Filmes/.gitkeep
+
+# Configurações locais do editor/assistente
+.claude/
+*.log
