@@ -26,7 +26,7 @@ Sem o ffmpeg, o Ghostflix funciona só com arquivos que o navegador já toca soz
 ## Como executar
 
 ```bash
-git clone https://github.com/<seu-usuario>/ghostflix.git
+git clone https://github.com/RaphaelMacedoB/ghostflix.git
 cd ghostflix
 npm install
 npm start
